@@ -8,14 +8,13 @@ total_number=$(($card_number * $node_number))
 training_port=24001
 
 dataset_name="CraftJarvis/JarvisVLA-Qwen2-VL-7B" #end before '-train.json' and '-valid.json'
-base_model_path="/public/models/mc-base-qwen2-vl-7b-250215"
+base_model_path="/share/models/mc-base-qwen2-vl-7b-2502"
 version="mc-vlp-vla-qwen2-vl-7b"
 WANDB_NAME="$version-c$total_number-e$epoch-b$batch-a$gradient_accumulation_steps"
 
-
 deepspeed --include localhost:$cuda_visible_devices --master_port=$training_port \
     jarvisvla/train/train.py \
-    --deepspeed configs/deepspeed_config_s3.json \
+    --deepspeed configs/deepspeed_config_s1.json \
     --dataset_name $dataset_name \
     --dataloader_num_workers 4 \
     --dataloader_pin_memory True \
@@ -34,7 +33,7 @@ deepspeed --include localhost:$cuda_visible_devices --master_port=$training_port
     --per_device_eval_batch_size $batch \
     --gradient_accumulation_steps $gradient_accumulation_steps \
     --do_train \
-    --evaluation_strategy "steps" \
+    --eval_strategy "steps" \
     --eval_steps 200 \
     --save_strategy "steps" \
     --save_steps 1600 \

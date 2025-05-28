@@ -34,7 +34,7 @@ deepspeed --hostfile scripts/vla/hostfile --include="hgx1:$cuda_visible_devices@
     --per_device_eval_batch_size $batch \
     --gradient_accumulation_steps $gradient_accumulation_steps \
     --do_train \
-    --evaluation_strategy "steps" \
+    --eval_strategy "steps" \
     --eval_steps 200 \
     --save_strategy "steps" \
     --save_steps 1600 \

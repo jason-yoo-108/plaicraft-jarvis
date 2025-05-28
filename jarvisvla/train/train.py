@@ -2,7 +2,7 @@
 Author: Muyao 2350076251@qq.com
 Date: 2025-03-04 23:35:08
 LastEditors: Muyao 2350076251@qq.com
-LastEditTime: 2025-03-21 15:41:51
+LastEditTime: 2025-05-28 23:10:17
 '''
 import logging
 import os
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     else:
         select_ids = range(train_dataset_len)
     train_dataset = train_dataset.select(select_ids) 
-    eval_dataset = raw_datasets['validation']
+    eval_dataset = raw_datasets['valid']
     
     if training_args.local_rank in { 0 ,-1 }:
         print(train_dataset_len,more_cfg.dataset_p,int(more_cfg.dataset_p*train_dataset_len))

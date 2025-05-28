@@ -2,7 +2,7 @@
 Author: Muyao 2350076251@qq.com
 Date: 2025-03-04 23:26:27
 LastEditors: Muyao 2350076251@qq.com
-LastEditTime: 2025-03-06 23:02:30
+LastEditTime: 2025-05-28 23:20:36
 '''
 
 
@@ -10,6 +10,7 @@ import numpy as np
 import torch
 from transformers import AutoProcessor
 import pathlib 
+import io
 from rich import console
 from typing import Literal,Union,Tuple
 from rich import console
@@ -125,7 +126,6 @@ class MultimodalChatDataCollatorforVLM:
             model_type = self.model_type,
             methods=self.aug_methods,
             image_folder=self.image_folder,
-            resize_image = self.resize_image,
             random_image_size=self.random_image_size,
             default_image_size=self.default_image_size,
             image_factor=self.image_factor,min_pixels=self.min_pixels,max_pixels=self.max_pixels,
@@ -643,15 +643,29 @@ class DataAugment(object):
             trans_y = random.randint(-translate_max, translate_max)
             self.params[self.TRANSLATE] = (trans_x, trans_y)
            
-    def image_open(self,image_path:Union[str,Path]) -> Image.Image:
-        if image_path[0]!="/": #if not abs path
-            image_path = Path(self.image_folder)/image_path
-        else:
-            image_path = Path(image_path)
-        if not image_path.exists():
-            raise ValueError(f"Image file {image_path} not found.")
+    def image_open(self,image_input:Union[str,Path]) -> Image.Image:
+        if isinstance(image_input, bytes):
+            # Handle the input as image bytes
+            image = Image.open(io.BytesIO(image_input)).convert("RGB")
+        elif isinstance(image_input, (str, Path)):
+            # Normalize to Path if it's a string
+            if isinstance(image_input, str):
+                image_input = Path(image_input)
 
-        image = Image.open(image_path).convert("RGB")
+            # If not an absolute path, assume it's relative to the image folder
+            if not image_input.is_absolute():
+                image_input = self.image_folder / image_input
+
+            # Check if the image file exists
+            if not image_input.exists():
+                raise ValueError(f"Image file {image_input} not found.")
+
+            # Open the image from the filesystem
+            image = Image.open(image_input).convert("RGB")
+        else:
+            # If input isn't bytes, str, or Path, raise an error
+            raise TypeError("image_input must be a path (str or Path) or bytes")
+        
         return image
             
     def image_augment(self, image: Image.Image) -> Image.Image:

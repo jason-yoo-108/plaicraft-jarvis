@@ -26,7 +26,7 @@ torchvision
 tqdm
 transformers
 trl
-vllm
+vllm==0.8.2
 wandb
 gcsfs==2024.12.0
 fsspec==2024.12.0

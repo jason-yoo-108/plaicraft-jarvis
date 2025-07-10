@@ -2,7 +2,10 @@ jarvisvla.egg-info/
 log/
 logs/
 wandb/
-
+vllm/
+vllm_wheels
+jarvisvla.def
+jarvisvla.sif
 
 data/
 logs/

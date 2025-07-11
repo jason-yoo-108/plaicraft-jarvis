@@ -292,7 +292,6 @@ class PlaicraftActionTokenizer(ActionTokenizer):
                 print(f"Warning: Key press '{key_press}' not found in PLAICraft to JARVIS mapping.")
             else:
                 result.append(token)
-        tt=1
         for mouse_movement in mouse_movements:
             pitch, yaw = mouse_movement[0], mouse_movement[1]
             pitch_match, yaw_match, pitch_min_dist, yaw_min_dist = None, None, float('inf'), float('inf')
@@ -303,8 +302,6 @@ class PlaicraftActionTokenizer(ActionTokenizer):
                 elif key_type == "mouse_y" and abs(value - yaw) < yaw_min_dist:
                     yaw_match, yaw_min_dist = value, abs(value - yaw)
             result.extend((PLAICRAFT_TO_JARVIS_MAP[("mouse_x", pitch_match)], PLAICRAFT_TO_JARVIS_MAP[("mouse_y", yaw_match)]))
-            print(tt, result)
-            tt+=1
         # print("FINAL", "".join([ACTION_BEGIN_TOKEN]+result+[ACTION_END_TOKEN]))
         return "".join([ACTION_BEGIN_TOKEN]+result+[ACTION_END_TOKEN])
 
